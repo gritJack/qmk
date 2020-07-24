@@ -251,7 +251,7 @@ static bool process_record_user_special(uint16_t keycode, bool pressed) {
     // other unspecial keys
     return true;
   }
-  return false;
+  return true;
 }
 
 char bat_state_str[24];
@@ -370,6 +370,9 @@ const char *read_battery_charging_state(void)
 
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  #ifdef OLED_DRIVER_ENABLE
+    oled_task();
+  #endif
   switch(keycode)
   {
     static bool caps_state=0;
@@ -462,7 +465,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // unset_layer(record);
     return process_record_user_special(keycode, record->event.pressed);
   }
-  return false;
+  return true;
 }
 
 #ifdef OLED_DRIVER_ENABLE

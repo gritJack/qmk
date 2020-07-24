@@ -273,8 +273,8 @@ int main(void) {
   usbd_enable();
   // Enter main loop.
   for (;;) {
-    usbd_process();
     main_loop();
+    usbd_process();
 //    app_sched_execute();
 //    if (NRF_LOG_PROCESS() == false) {
 //      power_manage();

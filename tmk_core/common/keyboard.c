@@ -73,9 +73,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #   include "hd44780.h"
 #endif
 
-#ifdef OLED_DRIVER_ENABLE
-#   include "oled_driver.h"
-#endif
+// #ifdef OLED_DRIVER_ENABLE
+// #   include "oled_driver.h"
+// #endif
 // #ifdef ENCODER_ENABLE
 // #   include "encoder.h"
 // #endif
@@ -304,13 +304,13 @@ MATRIX_LOOP_END:
     mousekey_task();
 #endif
 
-#ifdef OLED_DRIVER_ENABLE
-    // oled_task();
-#    ifndef OLED_DISABLE_TIMEOUT
-    // Wake up oled if user is using those fabulous keys!
-    if (matrix_change) oled_on();
-#    endif
-#endif
+// #ifdef OLED_DRIVER_ENABLE
+//     // oled_task();
+// #    ifndef OLED_DISABLE_TIMEOUT
+//     // Wake up oled if user is using those fabulous keys!
+//     if (matrix_change) oled_on();
+// #    endif
+// #endif
 
 // #ifdef ENCODER_ENABLE
 //     encoder_read();
