@@ -276,7 +276,7 @@ void keyboard_task(void)
                             .key = (keypos_t){ .row = r, .col = c },
                             .pressed = (matrix_row & ((matrix_row_t)1<<c)),
                             .time = (timer_read() | 1) /* time should not be 0 */
-                        });
+                        }, 0);
                         // record a processed key
                         matrix_prev[r] ^= ((matrix_row_t)1<<c);
 #ifdef QMK_KEYS_PER_SCAN
@@ -295,7 +295,7 @@ void keyboard_task(void)
     // we can get here with some keys processed now.
     if (!keys_processed)
 #endif
-    action_exec(TICK);
+    action_exec(TICK, 0);
 
 MATRIX_LOOP_END:
 

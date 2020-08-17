@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include QMK_KEYBOARD_H
 #include "app_ble_func.h"
 #include "nrf_gpio.h"
+#include "app_usbd.h"
+
 
 #ifdef WPM_ENABLE
   #include "wpm.h"
@@ -29,6 +31,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "string.h"
 #include "eeconfig.h"
 #include "action.h"
+#include "timer.h"
+#include "host.h"
+#include "app_timer.h"
+
 
 const uint8_t is_master = IS_LEFT_HAND;
 
@@ -371,7 +377,7 @@ const char *read_battery_charging_state(void)
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   #ifdef OLED_DRIVER_ENABLE
-    oled_task();
+    oled_on();
   #endif
   switch(keycode)
   {
@@ -448,6 +454,21 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         if (record->event.pressed) {
         	register_code(KC_VOLU);
         	unregister_code(KC_VOLU);
+
+          // register_code(KC_A);
+        	// unregister_code(KC_A);
+          // wait_us(3000);
+
+          // register_code(KC_B);
+        	// unregister_code(KC_B);
+          // uint32_t held_keycode_timer = timer_read32();
+          // register_code(KC_A);
+        	// unregister_code(KC_A);
+          // while ((timer_read32()- held_keycode_timer < 1000)){
+          //   app_usbd_event_queue_process();
+          // }
+          // register_code(KC_B);
+        	// unregister_code(KC_B);
         }
       break;
   }
@@ -470,6 +491,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
+    //   oled_scroll_set_area(0,2);
+    // oled_scroll_set_speed(4);
+    // oled_scroll_right();
     return OLED_ROTATION_0;
 }
 void oled_task_user() {
@@ -531,6 +555,37 @@ void oled_task_user() {
 
 #endif
 
+
+keyevent_t encoder_cw  = {
+    .key = (keypos_t){.row = 1, .col = 1},
+    .pressed = false
+};
+
+keyevent_t encoder_ccw  = {
+    .key = (keypos_t){.row = 1, .col = 1},
+    .pressed = false
+};
+uint8_t encoder_cw_kc = KC_NO;
+uint8_t encoder_ccw_kc = KC_NO;
+
+
+static void my_timeout_handler_cw (void * p_context){
+				// unregister_code(KC_VOLU);
+	encoder_cw.pressed = false;
+  encoder_rot = true;
+    encoder_cw.time = (timer_read() | 1); 
+    action_exec(encoder_cw, encoder_cw_kc);
+}
+static void my_timeout_handler_ccw (void * p_context){
+				// unregister_code(KC_VOLU);
+	encoder_ccw.pressed = false;
+  encoder_rot = true;
+
+    encoder_ccw.time = (timer_read() | 1); 
+    action_exec(encoder_ccw, encoder_ccw_kc);
+}
+
+
 //Media keys WORKS
 #ifdef ENCODER_ENABLE
 void encoder_update_user(uint8_t index, bool clockwise) {
@@ -538,16 +593,42 @@ void encoder_update_user(uint8_t index, bool clockwise) {
   {
     case _BASE:
       if(clockwise){
+        encoder_cw_kc = KC_VOLU;
+        encoder_cw.pressed = true;
+        encoder_rot = true;
+
+        encoder_cw.time = (timer_read() | 1);  //time should not be 0 
+        action_exec(encoder_cw, encoder_cw_kc);
+        APP_TIMER_DEF(my_timer_id);
+        app_timer_create(&my_timer_id, APP_TIMER_MODE_SINGLE_SHOT, my_timeout_handler_cw);
+        app_timer_start(my_timer_id, APP_TIMER_TICKS(16), NULL); 
        // usbd_send_consumer(KEYCODE2CONSUMER(KC_AUDIO_VOL_DOWN));
-        register_code(KC_VOLD);
-        wait_ms(10);
-        unregister_code(KC_VOLD);
+
+          // uint32_t held_keycode_timer = timer_read32();
+          // register_code(KC_A);
+        	// unregister_code(KC_A);
+          // while (timer_elapsed32(held_keycode_timer) < 2000){ /* no-op */ }
+          // register_code(KC_B);
+        	// unregister_code(KC_B);
+        // register_code(KC_VOLU);
+        // wait_ms(10);
+        // unregister_code(KC_VOLU);
       }
       else{
+        encoder_ccw_kc = KC_VOLD;
+        encoder_ccw.pressed = true;
+        encoder_rot = true;
+
+        encoder_ccw.time = (timer_read() | 1);  //time should not be 0 
+        action_exec(encoder_ccw, encoder_ccw_kc);
+        APP_TIMER_DEF(my_timer_id);   
+        app_timer_create(&my_timer_id, APP_TIMER_MODE_SINGLE_SHOT, my_timeout_handler_ccw);
+        app_timer_start(my_timer_id, APP_TIMER_TICKS(16), NULL);
+ 
         // usbd_send_consumer(KEYCODE2CONSUMER(KC_AUDIO_VOL_UP));
-        register_code(KC_VOLU);
-        wait_ms(10);
-        unregister_code(KC_VOLU);
+        // register_code(KC_VOLD);
+        // wait_ms(10);
+        // unregister_code(KC_VOLD);
       }
       break;
     case _DIR:

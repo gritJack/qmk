@@ -9,7 +9,8 @@ extern "C" {
 
 #define PIN1 GPIO(0,6)
 #define PIN2 GPIO(0,8)
-
+#define PIN3 GPIO(0,0)
+#define PIN4 GPIO(0,1)
 /*
 #ifdef FLIPPED_NRFMICRO //flipped nRFMicro 0.03 (jumpers on the on/off switch side)
 

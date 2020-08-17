@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "action_util.h"
 #include "action.h"
 #include "wait.h"
+#include "keycode_config.h"
+
 // #include "usbd.h"    //luanty
 // #include "ble_master.h"
 
@@ -55,11 +57,34 @@ int retro_tapping_counter = 0;
 #ifndef TAP_HOLD_CAPS_DELAY
 #    define TAP_HOLD_CAPS_DELAY 80
 #endif
+bool encoder_rot = false;
+// void encoder_action_exec(keyevent_t event, uint8_t code) {
+
+//     if (IS_CONSUMER(code)) {
+//         keyrecord_t record = {.event = event};
+        
+//         // action_t fake_a;
+//         uint16_t keycode = keycode_config((uint16_t)code);
+//         // fake_a.code = ACTION_USAGE_CONSUMER(KEYCODE2CONSUMER(keycode));
+//         // process_action(&fake_r, fake_a);
+
+//         action_t action = store_or_get_action(record.event.pressed, record.event.key);
+//         action.code = ACTION_USAGE_CONSUMER(KEYCODE2CONSUMER(keycode));
+
+//     } else {
+//         action_exec(event);
+//     }
+
+// }
 /** \brief Called to execute an action.
  *
  * FIXME: Needs documentation.
  */
-void action_exec(keyevent_t event) {
+uint8_t encoder_kc = KC_NO;
+void action_exec(keyevent_t event, uint8_t en_kc) {
+    if (encoder_rot) {
+        encoder_kc = en_kc;
+    }
     if (!IS_NOEVENT(event)) {
         dprint("\n---- action_exec: start -----\n");
         dprint("EVENT: ");
@@ -218,7 +243,13 @@ void process_action(keyrecord_t *record, action_t action) {
         do_release_oneshot = !is_oneshot_layer_active();
     }
 #endif
-
+    
+    if (encoder_rot) {
+        action.code = ACTION_USAGE_CONSUMER(KEYCODE2CONSUMER(encoder_kc));
+        // action.kind.id = ACT_USAGE;
+        // action.usage.code = encoder_kc;
+        encoder_rot = false;
+    }
     switch (action.kind.id) {
         /* Key and Mods */
         case ACT_LMODS:

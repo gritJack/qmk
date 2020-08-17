@@ -2,6 +2,8 @@
 #define KEYBOARDS_PAD_BLE_NEW_OLED_H_
 
 #include "quantum.h"
+#include "timer.h"
+
 extern bool ble_soft_set;
 
 #define LAYOUT( \

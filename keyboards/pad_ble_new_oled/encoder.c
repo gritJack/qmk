@@ -20,7 +20,7 @@
 #    include "split_util.h"
 #endif
 #include "nrf_gpio.h"
-#include "nrf_delay.h"
+// #include "nrf_delay.h"
 
 // for memcpy
 #include <string.h>

@@ -50,7 +50,6 @@
 
 #ifdef RGBLIGHT_ENABLE
 #include "rgblight.h"
-#undef PACKED
 #endif
 
 #ifdef EXTRAKEY_ENABLE
@@ -585,15 +584,6 @@ static void kbd_status(void) {
     keyboard_led_stats = led;
 }
 
-// static bool caps_status(void) {
-//    bool v;
-//    // v = app_usbd_hid_kbd_led_state_get(&m_app_hid_kbd, APP_USBD_HID_KBD_LED_NUM_LOCK);
-//    // v ? bsp_board_led_on(LED_HID_REP_IN) : bsp_board_led_off(LED_HID_REP_IN);
-
-//    return v = app_usbd_hid_kbd_led_state_get(&m_app_hid_kbd, APP_USBD_HID_KBD_LED_CAPS_LOCK);
-//    // v ? bsp_board_led_on(LED_HID_REP_OUT) : bsp_board_led_off(LED_HID_REP_OUT);
-// }
-
 
 /**
  * @brief Class specific event handler.
@@ -753,10 +743,13 @@ int usbd_enable(void) {
 }
 
 void usbd_process(void) {
+  // 判断是否有事件发生
   while (app_usbd_event_queue_process()) {
     if (auto_connection_check) {
-      if (auto_connection_check_cnt > 100) {
+      auto_connection_check_cnt++;
+      if (auto_connection_check_cnt > 100) { // make some delay
         auto_connection_check = false;
+        auto_connection_check_cnt = 0;
         NRF_LOG_DEBUG("auto_connection_check!");
         NRF_LOG_DEBUG("nrf_drv_usbd_is_started: %d", nrf_drv_usbd_is_started());
         NRF_LOG_DEBUG("nrf_drv_usbd_bus_suspend_check: %d", nrf_drv_usbd_bus_suspend_check());
@@ -767,7 +760,7 @@ void usbd_process(void) {
               NRF_LOG_DEBUG("USB send enabled");
             } else { // connect to CHARGER
               if (!get_ble_enabled()) {
-                select_ble();
+                select_ble(); // 需要强制关闭usb ** todo
                 NRF_LOG_DEBUG("BLE enable");
               }
             }
@@ -778,8 +771,6 @@ void usbd_process(void) {
             NRF_LOG_DEBUG("BLE enable");
           }
         }
-      } else {
-        auto_connection_check_cnt++;
       }
     }
     continue;/* Nothing to do */

@@ -118,7 +118,7 @@ void matrix_init_user() {
 }
 
 void matrix_scan_user(void) {
-
+  
   #ifdef ENCODER_ENABLE
     encoder_read();
   #endif
