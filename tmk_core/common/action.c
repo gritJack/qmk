@@ -57,12 +57,11 @@ int retro_tapping_counter = 0;
 #ifndef TAP_HOLD_CAPS_DELAY
 #    define TAP_HOLD_CAPS_DELAY 80
 #endif
-bool encoder_rot = false;
 // void encoder_action_exec(keyevent_t event, uint8_t code) {
 
 //     if (IS_CONSUMER(code)) {
 //         keyrecord_t record = {.event = event};
-        
+
 //         // action_t fake_a;
 //         uint16_t keycode = keycode_config((uint16_t)code);
 //         // fake_a.code = ACTION_USAGE_CONSUMER(KEYCODE2CONSUMER(keycode));
@@ -80,11 +79,7 @@ bool encoder_rot = false;
  *
  * FIXME: Needs documentation.
  */
-uint8_t encoder_kc = KC_NO;
-void action_exec(keyevent_t event, uint8_t en_kc) {
-    if (encoder_rot) {
-        encoder_kc = en_kc;
-    }
+void action_exec(keyevent_t event) {
     if (!IS_NOEVENT(event)) {
         dprint("\n---- action_exec: start -----\n");
         dprint("EVENT: ");
@@ -243,13 +238,7 @@ void process_action(keyrecord_t *record, action_t action) {
         do_release_oneshot = !is_oneshot_layer_active();
     }
 #endif
-    
-    if (encoder_rot) {
-        action.code = ACTION_USAGE_CONSUMER(KEYCODE2CONSUMER(encoder_kc));
-        // action.kind.id = ACT_USAGE;
-        // action.usage.code = encoder_kc;
-        encoder_rot = false;
-    }
+
     switch (action.kind.id) {
         /* Key and Mods */
         case ACT_LMODS:
@@ -815,8 +804,8 @@ void register_code(uint8_t code) {
     else if
         IS_SYSTEM(code) { host_system_send(KEYCODE2SYSTEM(code)); }
     else if
-        IS_CONSUMER(code) { host_consumer_send(KEYCODE2CONSUMER(code)); } 
-        // IS_CONSUMER(code) { 
+        IS_CONSUMER(code) { host_consumer_send(KEYCODE2CONSUMER(code)); }
+        // IS_CONSUMER(code) {
         //     ble_send_consumer(KEYCODE2CONSUMER(code));
         // } //luanty
 

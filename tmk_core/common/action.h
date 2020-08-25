@@ -45,13 +45,9 @@ typedef struct {
 #endif
 } keyrecord_t;
 
-extern bool encoder_rot;
-
-
-
 /* Execute action per keyevent */
 // void action_exec(keyevent_t event);
-void action_exec(keyevent_t event, uint8_t en_kc);
+void action_exec(keyevent_t event);
 
 // void encoder_action_exec(keyevent_t fake_e, uint8_t code);
 /* action for key */
