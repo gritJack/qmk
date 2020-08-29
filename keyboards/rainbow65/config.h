@@ -76,7 +76,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * Feature disable options
  *  These options are also useful to firmware size reduction.
  */
-
+// #define KEYBOARD_REPORT_SIZE 22
 /* disable debug print */
 // #define NO_DEBUG
 

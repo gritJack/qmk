@@ -126,7 +126,7 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_Y, KC_U, KC_I, KC_O, KC_P, KC_LBRC, KC_RBRC, KC_BSLS,
     KC_CAPS, KC_A, KC_S, KC_D, KC_F, KC_G, KC_H, KC_J, KC_K, KC_L, KC_SCLN, KC_QUOT, KC_ENT,
     KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_N, KC_M, KC_COMM, KC_DOT, KC_SLSH, KC_RSFT, KC_UP,
-    KC_LCTL, KC_LALT, KC_LGUI, KC_ABS_EN_1, KC_ABS_EN_2,  KC_SPC, MO(_DIR), TO(_BLE_SETTINGS), KC_RCTL, KC_LEFT, KC_DOWN, KC_RIGHT),
+    KC_LCTL, KC_LALT, KC_LGUI, KC_ABS_EN_1, KC_ABS_EN_2,  KC_SPC, MO(_DIR), MO(_BLE_SETTINGS), KC_RCTL, KC_LEFT, KC_DOWN, KC_RIGHT),
     [_DIR]=LAYOUT(
     KC_GRAVE, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_DEL, TO(0),
     KC_TRNS, KC_TRNS, KC_W, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
@@ -134,17 +134,17 @@ const uint16_t keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, TO(_SYS), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
     KC_TRNS, KC_TRNS, KC_TRNS, KC_ABS_EN_1, KC_ABS_EN_2, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
     [_RGB_SETTINGS]=LAYOUT(
-    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, TO(0),
+    TO(0), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, TO(0),
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
     KC_TRNS, KC_TRNS, KC_TRNS,KC_ABS_EN_1, KC_ABS_EN_2, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
 
     [_SYS]=LAYOUT(
-    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, TO(0),
+    TO(0), KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, TO(0),
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, ENT_DFU,
-    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+    KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, BATT_LV, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
     KC_TRNS, KC_TRNS, KC_TRNS, KC_ABS_EN_1, KC_ABS_EN_2, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS),
 
     [_BLE_SETTINGS]=LAYOUT(
@@ -264,14 +264,13 @@ static bool process_record_user_special(uint16_t keycode, bool pressed) {
 char bat_state_str[24];
 char bat_percentage_str[24];
 void set_bat_state(void) {
-  uint8_t value = nrf_gpio_pin_read(SWITCH_PIN);
-
-  if(value)
+  // uint8_t value = nrf_gpio_pin_read(SWITCH_PIN);
+  if(1)
   {
-    snprintf(bat_state_str, sizeof(bat_state_str), "VOLT: %4d MV",
-           get_vcc());
-    snprintf(bat_percentage_str, sizeof(bat_percentage_str), "&': %d %%",
-           (get_vcc()-2400)/18);
+    snprintf(bat_state_str, sizeof(bat_state_str), " VOLT: %4d MV",
+           get_vcc()*4200/3300);
+    snprintf(bat_percentage_str, sizeof(bat_percentage_str), " &': %d %%",
+           (get_vcc()*4200/3300-2400)/18);
   } else {
     snprintf(bat_state_str, sizeof(bat_state_str), "VOLT: CHECK SWITCH");
     snprintf(bat_percentage_str, sizeof(bat_percentage_str), "&': CHECK SWITCH");
@@ -290,7 +289,7 @@ const char *read_bat_percentage(void) {
 char hid_state_str[24];
 const char *read_hid_state(void) {
 #if defined IS_LEFT_HAND  &&  IS_LEFT_HAND == true
-  snprintf(hid_state_str, sizeof(hid_state_str), "(): %s %s",
+  snprintf(hid_state_str, sizeof(hid_state_str), " (): %s %s",
            (get_usb_enabled()) ? "!\"" : " ",
            (get_ble_enabled()) ? "#$" : " ");
 #endif
@@ -300,7 +299,7 @@ const char *read_hid_state(void) {
 #ifdef WPM_ENABLE
 char wpm_str[24];
 void set_wpm(void) {
-    snprintf(wpm_str, sizeof(wpm_str), "*+: %d", get_current_wpm());
+    snprintf(wpm_str, sizeof(wpm_str), " *+: %d", get_current_wpm());
 }
 const char *read_wpm(void) {
   return wpm_str;
@@ -311,7 +310,7 @@ const char *read_wpm(void) {
 char rgb_state_str[24];
 const char *read_rgb_state(void)
 {
-  snprintf(rgb_state_str, sizeof(rgb_state_str), "LIGHT %s MODE: %d",
+  snprintf(rgb_state_str, sizeof(rgb_state_str), " LIGHT %s MODE: %d",
     rgblight_config.enable ? "ON " : "OFF", rgblight_config.mode);
   return rgb_state_str;
 }
@@ -338,7 +337,7 @@ const char *read_ctrl_alt_state(void)
 char version_str[24];
 const char *read_version(void)
 {
-  snprintf(version_str, sizeof(version_str), "VER 0510 EEPROM");
+  snprintf(version_str, sizeof(version_str), " VER 0510 EEPROM");
   return version_str;
 }
 
@@ -493,7 +492,7 @@ void oled_task_user() {
         #ifdef WPM_ENABLE
           oled_write_ln(read_wpm(), false);
         #else
-          oled_write_ln("JasonRen_Pad", false);
+          oled_write_ln(" JasonRen-R65", false);
         #endif
         // oled_write_ln(ead_shift_win_state(, false);
         // matrix_write(matrix,read_ctrl_alt_state(, false);
@@ -506,35 +505,37 @@ void oled_task_user() {
         //oled_write_ln(read_timelog(, false);
       break;
       case _SYS:
-        oled_write_ln(",- =>          [ESC", false);
-        oled_write_ln("B: ENTER BOOT", false);
-        oled_write_ln(read_version(), false);
+        oled_write_ln(" ,- =>          [ESC", false);
+        oled_write_ln(" ENTER: BOOT", false);
+        oled_write_ln(" B: BAT", false);
+        oled_write_ln(" JasonRen-R65", false);
+        // oled_write_ln(read_version(), false);
       break;
       case _BLE_SETTINGS:
-        oled_write_ln(",- #$          [ESC", false);
-        oled_write_ln("T: TOGGLE HID", false);
-        oled_write_ln("DEL: DEL BONDS", false);
-        oled_write_ln("JasonRen_Pad", false);
+        oled_write_ln(" ,- #$          [ESC", false);
+        oled_write_ln(" A: MATCH", false);
+        oled_write_ln(" D: DEL BONDS", false);
+        oled_write_ln(" B: TOGGLE BLE", false);
       break;
       case _RGB_SETTINGS:
       #ifdef RGBLIGHT_ENABLE
-        oled_write_ln(",- ;<          [ESC", false);
+        oled_write_ln(" ,- ;<          [ESC", false);
         oled_write_ln(read_rgb_state(), false);
-        oled_write_ln("T: TOGGLE E: RESET ", false);
-        oled_write_ln( "M: MODE HUE:ENCODER", false);
+        oled_write_ln(" T: TOGGLE E: RESET ", false);
+        oled_write_ln( " M: MODE HUE:ENCODER", false);
       #else
-        oled_write_ln(",- ;<          [ESC", false);
-        oled_write_ln("RGB NOT SUPPORTED", false);
-        oled_write_ln("JasonRen_Pad", false);
+        oled_write_ln(" ,- ;<          [ESC", false);
+        oled_write_ln(" RGB NOT SUPPORTED", false);
+        oled_write_ln(" JasonRen-R65", false);
         oled_write_ln("", false);
 
       #endif
       break;
       default:
-      oled_write_ln("ERROR LAYER", false);
-      oled_write_ln("JasonRen_Pad", false);
-      oled_write_ln("JasonRen_Pad", false);
-      oled_write_ln("JasonRen_Pad", false);
+      oled_write_ln(" ERROR LAYER", false);
+      oled_write_ln(" JasonRen-R65", false);
+      oled_write_ln(" Y R", false);
+      oled_write_ln(" BIU", false);
       break;
     }
 }
@@ -580,17 +581,6 @@ void encoder_update_user(uint8_t index, bool clockwise) {
         APP_TIMER_DEF(my_timer_id);
         app_timer_create(&my_timer_id, APP_TIMER_MODE_SINGLE_SHOT, my_timeout_handler_cw);
         app_timer_start(my_timer_id, APP_TIMER_TICKS(20), NULL);
-       // usbd_send_consumer(KEYCODE2CONSUMER(KC_AUDIO_VOL_DOWN));
-
-          // uint32_t held_keycode_timer = timer_read32();
-          // register_code(KC_A);
-        	// unregister_code(KC_A);
-          // while (timer_elapsed32(held_keycode_timer) < 2000){ /* no-op */ }
-          // register_code(KC_B);
-        	// unregister_code(KC_B);
-        // register_code(KC_VOLU);
-        // wait_ms(10);
-        // unregister_code(KC_VOLU);
       }
       else{
         encoder_ccw.pressed = true;
